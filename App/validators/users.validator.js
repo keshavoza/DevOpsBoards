@@ -3,15 +3,14 @@ import Joi from "joi";
 const signupSchema = Joi.object({
   emailId: Joi.string().required().email(),
   password: Joi.string().required().min(6),
+  userName: Joi.string().required(),
+  surName: Joi.string().required(),
 });
 
 const loginSchema = Joi.object({
   emailId: Joi.string().required().email(),
   password: Joi.string().required(),
 });
-
-
-
 
 export default {
   signupSchema,
