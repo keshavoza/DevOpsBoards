@@ -32,16 +32,15 @@ const login = async (emailId) => {
   }
 };
 
-const signup = async (emailId, password) => {
+const signup = async (emailId, password, userName, surName) => {
   try {
     const [userResult] = await db
       .promise()
       .query(
-        `insert into UserTable (emailID,password,isDeleted) values (?,?,?)`,
-        [emailId, password, false]
+        `insert into UserTable (emailID,password,userName,surName,isDeleted) values (?,?,?,?,?)`,
+        [emailId, password, userName, surName, false]
       );
     if (userResult.affectedRows) {
-      
       const userId = userResult.insertId;
       const [roleResult] = await db
         .promise()
@@ -49,10 +48,10 @@ const signup = async (emailId, password) => {
           `insert into rolesForUsers(userID,roleId,isDeleted) values (?,?,?)`,
           [userId, 1, false]
         );
-        if(roleResult.affectedRows) {     
-            return { error: null, result: userResult, roleResult };
-        }
+      if (roleResult.affectedRows) {
+        return { error: null, result: userResult, roleResult };
       }
+    }
   } catch (error) {
     console.error(error);
     throw error;

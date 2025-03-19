@@ -5,6 +5,8 @@ create table
         Id int primary key auto_increment,
         emailId varchar(255),
         password varchar(255),
+        userName varchar(255),
+        surName varchar(255),
         isDeleted bool
     );
 
@@ -14,6 +16,8 @@ create table
         Role varchar(255),
         isdeleted bool
     );
+
+insert into Roles (Role,isDeleted) values ("user",false);
 
 
 create Table
@@ -25,6 +29,12 @@ create Table
         FOREIGN KEY (userId) references userTable (Id),
         foreign key (roleId) references Roles (Id)
     );
+
+create Table Permission (
+	Id int primary key,
+    permission varchar(255),
+    isdeleted bool
+);
 
 create table
     permissionForRoles (
