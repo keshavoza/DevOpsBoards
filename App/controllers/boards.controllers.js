@@ -33,8 +33,8 @@ export const listBoards = async (userId, role) => {
 
 export const adminSpecificBoard = async (role, boardId) => {
     try {
-
-        if (role === "admin") {
+// Temporary Comment
+        // if (role === "admin") {
 
             const result = await getBoardById(boardId);
 
@@ -42,10 +42,10 @@ export const adminSpecificBoard = async (role, boardId) => {
             return result.result;
 
 
-        } else {
+        // } else {
 
-            throw access_forbidden;
-        }
+        //     throw access_forbidden;
+        // }
     } catch (error) {
         throw error;
     }

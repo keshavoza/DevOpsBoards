@@ -64,6 +64,7 @@ CREATE TABLE
         Id INT PRIMARY KEY AUTO_INCREMENT,
         boardId INT NOT NULL,
         userId INT NOT NULL,
+        isDeleted bool,
         FOREIGN KEY (boardId) REFERENCES BoardTable (boardId),
         FOREIGN KEY (userId) REFERENCES UserTable (Id),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
