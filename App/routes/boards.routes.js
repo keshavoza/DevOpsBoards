@@ -1,5 +1,5 @@
 import express from "express";
-import { listBoards,adminSpecificBoard,createBoard,addAuserToAExistingBoard,deleteBoard,createBoardByAdmin, editBoard,getMembersofSpecificBoard,editBoardAdmin } from "../controllers/boards.controllers.js";
+import { listBoards,adminSpecificBoard,createBoard,addAuserToAExistingBoard,deleteBoard,createBoardByAdmin, editBoard,getMembersofSpecificBoard,editBoardAdmin,addBoardToFavourite,listFavouriteBoards } from "../controllers/boards.controllers.js";
 import { authenticateJwtToken } from "../../Middlewares/jwtAuthMiddleware.js";
 export const router = express.Router();
 import {successStatusCodes} from '../../constants/statusCodes.js'
@@ -8,7 +8,7 @@ import validators from '../validators/boards.validators.js';
 import {validateBody} from '../../common/utils.js';
 import { boardRoutes } from "../../constants/routes.constants.js";
 
-const {GETBOARDS,GETSPECIFICBOARD,GETBOARDMEMBERS,ADDBOARDBYADMIN,ADDBOARDBYUSER,ADDUSERTOBOARD,UPDATEBOARDADMIN,UPDATEBOARDUSER,DELETEBOARD} = boardRoutes
+const {GETBOARDS,GETSPECIFICBOARD,GETBOARDMEMBERS,ADDBOARDBYADMIN,ADDBOARDBYUSER,ADDUSERTOBOARD,UPDATEBOARDADMIN,UPDATEBOARDUSER,DELETEBOARD,ADDBOARDTOFAVOURITES,LISTFAVOURITEBOARDS} = boardRoutes
 
 
 const {createBoardSchema,editBoardSchema}=validators;
@@ -98,6 +98,35 @@ router.post(ADDUSERTOBOARD,authenticateJwtToken,async(req,res,next)=>{
         next(error);
     }
 });
+
+router.post(ADDBOARDTOFAVOURITES,authenticateJwtToken,async(req,res,next)=>{
+    try{
+        
+        const {locals:{userId}}=res;
+     
+        const {params:{boardId}}=req;
+       
+       
+   
+        const result=await addBoardToFavourite(userId,boardId);
+  
+        res.status(result.statusCode).send(new responseHandler(result))
+    }catch(error){
+        next(error);
+    }
+});
+
+
+router.get(LISTFAVOURITEBOARDS,authenticateJwtToken,async(requestAnimationFrame,res,next)=>{
+    try{
+        const {locals:{userId}}=res;
+
+        const result=await listFavouriteBoards(userId)
+        res.status(ok).send(new responseHandler(result))
+    }catch(error){
+        next(error);
+    }
+})
 
 router.put(UPDATEBOARDUSER,validateBody(editBoardSchema),authenticateJwtToken,async(req,res,next)=>{
     try{

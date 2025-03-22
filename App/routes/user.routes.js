@@ -22,7 +22,8 @@ router.post(SIGNUP, validateBody(signupSchema), async (req, res, next) => {
     const singupResponse = await userControllers.signupUser(
       emailId,
       password,
-      userName
+      userName,
+      surName
     );
     res
       .status(singupResponse.statusCode)

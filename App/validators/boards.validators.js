@@ -16,7 +16,9 @@ const createBoardSchema = Joi.object({
             trimAndLower: schema => schema.trim().lowercase()
         })
         .required(),
-    assignedTo: Joi.string().email()
+    assignedTo: Joi.string().email(),
+    comment:Joi.string(),
+    boardIcon:Joi.string()
 });
 
 
@@ -32,7 +34,8 @@ const editBoardSchema = Joi.object({
         .alter({
             trimAndLower: schema => schema.trim().lowercase()
         }),
-    assignedTo:Joi.string().email()
+    assignedTo:Joi.string().email(),
+    comment:Joi.string()
 })
 
 export default {

@@ -58,9 +58,11 @@ export const boardRoutes = {
     ADDBOARDBYADMIN: "/createBoardByAdmin",
     ADDBOARDBYUSER : "/createBoard",
     ADDUSERTOBOARD : "/adduserToExistingBoard/:userId/:boardId",
+    ADDBOARDTOFAVOURITES:"/addBoardToFavourites/:boardId",
     UPDATEBOARDUSER : "/updateBoard/:boardId",
     UPDATEBOARDADMIN : "/updateBoardAdmin/:boardId",
-    DELETEBOARD : "/:boardId"
+    DELETEBOARD : "/:boardId",
+    LISTFAVOURITEBOARDS:"/listFavouriteboards"
 }
 
 export const epicsRoutes = {

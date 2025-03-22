@@ -5,7 +5,7 @@ import {messageHandler} from '../../common/handlers.js'
 
 const{badRequestMessage,unauthorizedMessage,forbiddenMessage,notFoundMessage,conflictMessage,boardNotFound} = errorMessages
 
-const {createdMessage,updatedMessage,deletedMessage,loginSuccessMessage,noContentMessage,userAddedToABoard} = successMessages
+const {createdMessage,updatedMessage,deletedMessage,loginSuccessMessage,noContentMessage,userAddedToABoard,addedToFavourites} = successMessages
 
 const {badRequest,unauthorized,forbidden,notFound,methodNotAllowed,conflict} = errorStatusCodes
 
@@ -24,7 +24,8 @@ export const boardsMessages = {
     bad_request:new messageHandler(badRequest,badRequestMessage),
     no_content:new messageHandler(noContent,noContentMessage),
     user_added_to_existing_board:new messageHandler(ok,userAddedToABoard),
-    board_not_found:new messageHandler(notFound,boardNotFound)
+    board_not_found:new messageHandler(notFound,boardNotFound),
+    board_added_to_favourites:new messageHandler(ok,addedToFavourites)
     
 }
 

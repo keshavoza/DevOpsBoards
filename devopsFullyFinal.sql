@@ -56,7 +56,9 @@ CREATE TABLE
         Type VARCHAR(50),
         isDeleted BOOLEAN,
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        boardIcon VARCHAR(255) CHARACTER SET utf8mb4,
+        isFavourite BOOLEAN DEFAULT false
     );
 
 CREATE TABLE
@@ -65,6 +67,7 @@ CREATE TABLE
         boardId INT NOT NULL,
         userId INT NOT NULL,
         isDeleted bool,
+        comment varchar(255),
         FOREIGN KEY (boardId) REFERENCES BoardTable (boardId),
         FOREIGN KEY (userId) REFERENCES UserTable (Id),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -168,3 +171,5 @@ CREATE TABLE
         FOREIGN KEY (userStoryId) REFERENCES userStories (userStoryId),
         foreign key (userId) references userTable (Id)
     );
+    
+    

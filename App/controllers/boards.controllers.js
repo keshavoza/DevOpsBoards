@@ -1,6 +1,6 @@
 
 
-import { getUserBoard, getBoards, getBoardById, checkUserExists, createBoardForUser, checkBoardExistforUser, addAuserToAExistingBoardDb, deleteBoardDb, deleteBoardDbForAdmin, checkBoardExist,createBoardByAdminDb,editBoardDb,editBoardDbAdmin,checkBoardExistAdmin,getMembersofSpecificBoardAdmin,getMembersofSpecificBoardDb,getUserEmail,checkEmail } from "../services/boards.services.js"
+import { getUserBoard, getBoards, getBoardById, checkUserExists, createBoardForUser, checkBoardExistforUser, addAuserToAExistingBoardDb, deleteBoardDb, deleteBoardDbForAdmin, checkBoardExist,createBoardByAdminDb,editBoardDb,editBoardDbAdmin,checkBoardExistAdmin,getMembersofSpecificBoardAdmin,getMembersofSpecificBoardDb,getUserEmail,checkEmail,updateBoardFavouriteFlag,listFavouriteBoardsData } from "../services/boards.services.js"
 
 
 
@@ -8,7 +8,7 @@ import { boardsMessages } from "../messages/boards.messages.js";
 
 
 
-const { board_fetched, conflict_message, unauthorized, board_created, board_updated, board_deleted, access_forbidden, bad_request, not_found, user_added_to_existing_board,board_not_found } = boardsMessages
+const { board_fetched, conflict_message, unauthorized, board_created, board_updated, board_deleted, access_forbidden, bad_request, not_found, user_added_to_existing_board,board_not_found,board_added_to_favourites } = boardsMessages
 
 
 export const listBoards = async (userId, role) => {
@@ -71,13 +71,12 @@ export const getMembersofSpecificBoard = async(role,userId,boardId)=>{
 
 export const createBoard = async (createBoardBody, userId) => {
     try {
-        let { title, assignedTo, state, type } = createBoardBody;
-
+        let { title, assignedTo, state, type,comment,boardIcon} = createBoardBody;
         if(!assignedTo){
             const resultEmail = await getUserEmail(userId)
             if(resultEmail.result.length){
                 const email = resultEmail.result[0][0].emailID;
-                await createBoardForUser(userId, title, email, state, type);
+                await createBoardForUser(userId, title, email, state, type,comment,boardIcon);
                 return board_created
             }else{
                 throw not_found
@@ -90,6 +89,37 @@ export const createBoard = async (createBoardBody, userId) => {
         throw error;
     };
 }
+
+export const addBoardToFavourite = async (userId, boardId) => {
+    try {
+        const updateResult = await updateBoardFavouriteFlag(userId, boardId);
+
+        if (updateResult.affectedRows > 0) {
+            return board_added_to_favourites
+        } else {
+            return not_found
+        }
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const listFavouriteBoards=async(userId)=>{
+    try{
+        console.log(userId)
+        const list=await listFavouriteBoardsData(userId)
+        if(list){
+            return result.result
+        }else{
+            return board_not_found
+        }
+    }
+catch(error){
+
+        throw error
+}
+}
+
 
 export const createBoardByAdmin=async(role,createBoardBody)=>{
     try{

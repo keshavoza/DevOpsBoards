@@ -115,18 +115,20 @@ const createBoardByAdminDb=async(userId,title,assignedTo,state,type)=>{
 
 
 
-const createBoardForUser = async (userId, title, email, state, type) => {
+const createBoardForUser = async (userId, title, email, state, type,comment,boardIcon) => {
     try {
        
-        const newBoard = {
-            userId: userId,
-            title: title,
-            assignedTo: email,
-            state: state,
-            type: type,
-            isDeleted: false 
-        };
-
+      const newBoard = {
+        userId: userId,
+        title: title,
+        assignedTo: email,
+        state: state,
+        type: type,
+        isDeleted: false,
+        comment: comment,
+        boardIcon: boardIcon
+    };
+    
 
         
         const [boardResult] = await db.promise().query(
@@ -145,10 +147,37 @@ const createBoardForUser = async (userId, title, email, state, type) => {
 
        
     } catch (error) {
-
+      console.log(error)
         throw  error ;
     }
 };
+
+const updateBoardFavouriteFlag = async (userId,boardId) => {
+  try {
+      const [result] = await db.promise().query(
+          `UPDATE BoardTable 
+           SET isFavourite = true 
+           WHERE userId = ? AND boardId = ?`,
+          [userId,boardId]
+      );
+      return result;
+  } catch (error) {
+    console.log(error)
+      throw error;
+  }
+};
+
+const listFavouriteBoardsData=async (userId)=>{
+  try{
+    const [result]=await db.promise().query(
+      `SELECT * FROM BoardTable where userId=? and isFavourite=true`,
+      [userId]
+    );
+    return result
+  }catch(error){
+    throw error
+  }
+}
 
 const addAuserToAExistingBoardDb=async(userId,boardId)=>{
   try{
@@ -323,5 +352,7 @@ export {
   editBoardDb,
   checkBoardExistforUser,
   deleteBoardDbForAdmin,
-  deleteBoardDb
+  deleteBoardDb,
+  updateBoardFavouriteFlag,
+  listFavouriteBoardsData
 };
