@@ -10,8 +10,8 @@ export const errorMessages = {
     "unauthenticatedJwtToken" :"you are not authenticated to use please enter jwt token",
     "jwtInvalid" : "jwt token is invalid",
     "boardNotFound":"Board not found.",
-    "sprintNotFound":"Sprint not found"
-
+    "sprintNotFound":"Sprint not found",
+    "updatedpriorityFailed":"Updated priority failed"
 
 }
 
@@ -22,7 +22,8 @@ export const successMessages = {
     "userAddedToABoard":"User added to the board.",
     "userAddedToExistingSprint":"User added to existing sprint.",
     "userAddedToExistingUserStory":"User added to existing user story",
-    "addedToFavourites":"Board added to favourites"
+    "addedToFavourites":"Board added to favourites",
+    "priorityUpdated":"Priority updated"
 }
 
 

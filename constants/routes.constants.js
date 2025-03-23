@@ -62,7 +62,8 @@ export const boardRoutes = {
     UPDATEBOARDUSER : "/updateBoard/:boardId",
     UPDATEBOARDADMIN : "/updateBoardAdmin/:boardId",
     DELETEBOARD : "/:boardId",
-    LISTFAVOURITEBOARDS:"/listFavouriteboards"
+    LISTFAVOURITEBOARDS:"/listFavouriteboards",
+    UPDATEBOARDPRIORITY:"/updateBoardPriority"
 }
 
 export const epicsRoutes = {

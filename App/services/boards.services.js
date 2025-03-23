@@ -175,6 +175,36 @@ const createBoardForUser = async (
   }
 };
 
+const updateBoardPrioritiesService = async (boardArray, userId) => {
+  const connection = await db.promise().getConnection();
+  try {
+    await connection.beginTransaction();
+
+    for (let i = 0; i < boardArray.length; i++) {
+      const board = boardArray[i];
+      const newPriority = i;
+
+      await connection.query(
+        `UPDATE BoardTable 
+         SET priority = ? 
+         WHERE boardId = ? AND userId = ?`,
+        [newPriority, board.boardId, userId]
+      );
+    }
+
+    await connection.commit();
+    connection.release();
+    return true;
+
+  } catch (error) {
+    await connection.rollback();
+    connection.release();
+    console.log("Priority Update Error:", error);
+    return false;
+  }
+};
+
+
 const listFavouriteBoardsData = async (userId) => {
   try {
     const [result] = await db
@@ -358,6 +388,7 @@ export {
   checkEmail,
   createBoardByAdminDb,
   createBoardForUser,
+  updateBoardPrioritiesService,
   addAuserToAExistingBoardDb,
   getMembersofSpecificBoardAdmin,
   getMembersofSpecificBoardDb,

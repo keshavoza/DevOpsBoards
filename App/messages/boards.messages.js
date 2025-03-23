@@ -3,9 +3,9 @@ import {errorStatusCodes,successStatusCodes} from '../../constants/statusCodes.j
 import {messageHandler} from '../../common/handlers.js'
 
 
-const{badRequestMessage,unauthorizedMessage,forbiddenMessage,notFoundMessage,conflictMessage,boardNotFound} = errorMessages
+const{badRequestMessage,unauthorizedMessage,forbiddenMessage,notFoundMessage,conflictMessage,boardNotFound,updatedpriorityFailed} = errorMessages
 
-const {createdMessage,updatedMessage,deletedMessage,loginSuccessMessage,noContentMessage,userAddedToABoard,addedToFavourites} = successMessages
+const {createdMessage,updatedMessage,deletedMessage,loginSuccessMessage,noContentMessage,userAddedToABoard,addedToFavourites,priorityUpdated} = successMessages
 
 const {badRequest,unauthorized,forbidden,notFound,methodNotAllowed,conflict} = errorStatusCodes
 
@@ -25,7 +25,9 @@ export const boardsMessages = {
     no_content:new messageHandler(noContent,noContentMessage),
     user_added_to_existing_board:new messageHandler(ok,userAddedToABoard),
     board_not_found:new messageHandler(notFound,boardNotFound),
-    board_added_to_favourites:new messageHandler(ok,addedToFavourites)
+    board_added_to_favourites:new messageHandler(ok,addedToFavourites),
+    priority_updated:new messageHandler(ok, priorityUpdated),
+    update_failed:new messageHandler(badRequest,updatedpriorityFailed)
     
 }
 

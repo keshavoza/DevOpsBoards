@@ -1,6 +1,6 @@
 
 
-import { getUserBoard, getBoards, getBoardById, checkUserExists, createBoardForUser, checkBoardExistforUser, addAuserToAExistingBoardDb, deleteBoardDb, deleteBoardDbForAdmin, checkBoardExist,createBoardByAdminDb,editBoardDb,editBoardDbAdmin,checkBoardExistAdmin,getMembersofSpecificBoardAdmin,getMembersofSpecificBoardDb,getUserEmail,checkEmail,listFavouriteBoardsData } from "../services/boards.services.js"
+import { getUserBoard, getBoards, getBoardById, checkUserExists, createBoardForUser,updateBoardPrioritiesService, checkBoardExistforUser, addAuserToAExistingBoardDb, deleteBoardDb, deleteBoardDbForAdmin, checkBoardExist,createBoardByAdminDb,editBoardDb,editBoardDbAdmin,checkBoardExistAdmin,getMembersofSpecificBoardAdmin,getMembersofSpecificBoardDb,getUserEmail,checkEmail,listFavouriteBoardsData } from "../services/boards.services.js"
 
 
 
@@ -89,6 +89,29 @@ export const createBoard = async (createBoardBody, userId) => {
         throw error;
     };
 }
+
+export const updateBoardPriority = async (priorityBody, userId) => {
+    try {
+      const { data } = priorityBody;
+  
+      if (!Array.isArray(data) || !data.length) {
+        throw not_found
+      }
+  
+     
+      const result = await updateBoardPrioritiesService(data, userId);
+  
+      if (result) {
+        return priority_updated; 
+      } else {
+        throw update_failed; 
+      }
+  
+    } catch (error) {
+      throw error;
+    }
+  };
+  
 
 
 export const listFavouriteBoards=async(userId)=>{
