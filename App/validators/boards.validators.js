@@ -3,42 +3,44 @@ import Joi from "joi";
 
 
 const createBoardSchema = Joi.object({
-    title: Joi.string().required(),
-    state: Joi.string()
+  title: Joi.string().required(),
+  state: Joi.string()
         .valid('To do', 'Doing', 'Done')
-        .alter({
+    .alter({
             trimAndLower: schema => schema.trim().lowercase()
-        })
-        .required(),
-    type: Joi.string()
+    })
+    .required(),
+  type: Joi.string()
         .valid('Epic')
-        .alter({
+    .alter({
             trimAndLower: schema => schema.trim().lowercase()
-        })
-        .required(),
-    assignedTo: Joi.string().email(),
+    })
+    .required(),
+  assignedTo: Joi.string().email(),
     comment:Joi.string(),
     boardIcon:Joi.string()
 });
 
 
 const editBoardSchema = Joi.object({
-    title: Joi.string(),
-    state: Joi.string()
+  title: Joi.string(),
+  state: Joi.string()
         .valid('To do', 'Doing', 'Done')
-        .alter({
+    .alter({
             trimAndLower: schema => schema.trim().lowercase()
-        }),
-    type: Joi.string()
+    }),
+  type: Joi.string()
         .valid('Epic')
-        .alter({
+    .alter({
             trimAndLower: schema => schema.trim().lowercase()
-        }),
-    assignedTo:Joi.string().email(),
-    comment:Joi.string()
-})
+    }),
+  assignedTo:Joi.string().email(),
+  comment:Joi.string(),
+  boardIcon: Joi.string(),
+  isFavourite:Joi.bool()
+});
 
 export default {
-    createBoardSchema,
+  createBoardSchema,
     editBoardSchema
 }

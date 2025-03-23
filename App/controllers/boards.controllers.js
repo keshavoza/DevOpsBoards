@@ -1,6 +1,6 @@
 
 
-import { getUserBoard, getBoards, getBoardById, checkUserExists, createBoardForUser, checkBoardExistforUser, addAuserToAExistingBoardDb, deleteBoardDb, deleteBoardDbForAdmin, checkBoardExist,createBoardByAdminDb,editBoardDb,editBoardDbAdmin,checkBoardExistAdmin,getMembersofSpecificBoardAdmin,getMembersofSpecificBoardDb,getUserEmail,checkEmail,updateBoardFavouriteFlag,listFavouriteBoardsData } from "../services/boards.services.js"
+import { getUserBoard, getBoards, getBoardById, checkUserExists, createBoardForUser, checkBoardExistforUser, addAuserToAExistingBoardDb, deleteBoardDb, deleteBoardDbForAdmin, checkBoardExist,createBoardByAdminDb,editBoardDb,editBoardDbAdmin,checkBoardExistAdmin,getMembersofSpecificBoardAdmin,getMembersofSpecificBoardDb,getUserEmail,checkEmail,listFavouriteBoardsData } from "../services/boards.services.js"
 
 
 
@@ -90,19 +90,6 @@ export const createBoard = async (createBoardBody, userId) => {
     };
 }
 
-export const addBoardToFavourite = async (userId, boardId) => {
-    try {
-        const updateResult = await updateBoardFavouriteFlag(userId, boardId);
-
-        if (updateResult.affectedRows > 0) {
-            return board_added_to_favourites
-        } else {
-            return not_found
-        }
-    } catch (error) {
-        throw error;
-    }
-};
 
 export const listFavouriteBoards=async(userId)=>{
     try{
@@ -179,33 +166,30 @@ export const addAuserToAExistingBoard = async (role,userId,boardId) => {
 }
 
 
-export const editBoard=async(requiredColumns,role,userId,boardId)=>{
-    try{
-       
-        if(role==="admin"){
-            const ifBoardExists=await checkBoardExistAdmin(boardId)
-            if(ifBoardExists.result.length){
-                await editBoardDbAdmin(requiredColumns,boardId)
-                return board_updated;
-            }
-            else{
-                throw not_found
-            }
-        } else if(role==="user"){
-            const ifBoardExists=await checkBoardExist(userId,boardId);
-            if(ifBoardExists.result.length){
-                await editBoardDb(requiredColumns,userId,boardId)
-                return board_updated;
-            }
-            else{
-                throw not_found
-            }
+export const editBoard = async (requiredColumns, role, userId, boardId) => {
+    try {
+      if (role === "admin") {
+        const ifBoardExists = await checkBoardExistAdmin(boardId);
+        if (ifBoardExists.result.length) {
+          await editBoardDbAdmin(requiredColumns, boardId);
+          return board_updated;
+        } else {
+          throw not_found;
         }
-    }catch(error){
-        throw error;
+      } else if (role === "user") {
+        const ifBoardExists = await checkBoardExist(userId, boardId);
+        if (ifBoardExists.result.length) {
+          await editBoardDb(requiredColumns, userId, boardId);
+          return board_updated;
+        } else {
+          throw not_found;
+        }
+      }
+    } catch (error) {
+      throw error;
     }
-    
-}
+  };
+  
 
 export const editBoardAdmin=async(requiredColumns,role,boardId)=>{
     try{
