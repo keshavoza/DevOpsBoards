@@ -8,7 +8,7 @@ import { boardsMessages } from "../messages/boards.messages.js";
 
 
 
-const { board_fetched, conflict_message, unauthorized, board_created, board_updated, board_deleted, access_forbidden, bad_request, not_found, user_added_to_existing_board,board_not_found,board_added_to_favourites } = boardsMessages
+const { board_fetched, conflict_message, unauthorized, board_created, board_updated, board_deleted, access_forbidden, bad_request, not_found, user_added_to_existing_board,board_not_found,board_added_to_favourites,priority_updated,update_failed } = boardsMessages
 
 
 export const listBoards = async (userId, role) => {
