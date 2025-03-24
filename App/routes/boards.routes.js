@@ -83,9 +83,9 @@ router.post(ADDBOARDBYUSER,validateBody(createBoardSchema),authenticateJwtToken,
 router.put(UPDATEBOARDPRIORITY,authenticateJwtToken,async(req,res,next)=>{
     try{
         const{body:priorityBody}=req;
-        const{locals:{role,userId}}=res;
+        const{locals:{userId}}=res;
         const {params:{boardId}}=req;
-        const result=await updateBoardPriority(priorityBody,role,userId,boardId)
+        const result=await updateBoardPriority(priorityBody,userId,boardId)
         res.status(result.statusCode).send(new responseHandler(result))
     }catch(error){
         next(error)

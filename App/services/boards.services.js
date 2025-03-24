@@ -16,7 +16,8 @@ const getUserBoard = async (userId) => {
     const [rows] = await db.promise().query(
       `SELECT bt.* FROM BoardTable bt
       INNER JOIN boardUser bu ON bt.boardId = bu.boardId
-      WHERE bu.userId = ? AND bt.isDeleted = false`,
+      WHERE bu.userId = ? AND bt.isDeleted = false
+      ORDER BY bt.priority ASC`,
       [userId]
     );
     return { result: rows };
