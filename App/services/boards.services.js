@@ -1,22 +1,18 @@
-
 import { db } from "../../connection.js";
-
-
 
 const getBoards = async () => {
   try {
-    const [rows] = await db.promise().query(
-      `SELECT * FROM BoardTable WHERE isDeleted = false`
-    );
-    return {result: rows };
+    const [rows] = await db
+      .promise()
+      .query(`SELECT * FROM BoardTable WHERE isDeleted = false`);
+    return { result: rows };
   } catch (error) {
-    throw error ;
+    throw error;
   }
 };
 
 const getUserBoard = async (userId) => {
   try {
- 
     const [rows] = await db.promise().query(
       `SELECT bt.* FROM BoardTable bt
       INNER JOIN boardUser bu ON bt.boardId = bu.boardId
@@ -25,95 +21,91 @@ const getUserBoard = async (userId) => {
     );
     return { result: rows };
   } catch (error) {
-    throw  error ;
+    throw error;
   }
 };
 
 const getBoardById = async (boardId) => {
   try {
-
-    const [rows] = await db.promise().query(
+    const [rows] = await db
+      .promise()
+      .query(
         `SELECT * FROM BoardTable WHERE boardId = ? AND isDeleted = false`,
         [boardId]
       );
     return { result: rows };
   } catch (error) {
-    throw  error ;
+    throw error;
   }
 };
 
+const getUserEmail = async (userId) => {
+  try {
+    const email = await db
+      .promise()
+      .query(`select emailID from userTable where Id=?`, [userId]);
 
-const getUserEmail=async(userId)=>{
-  try{
-      
-      const email=await db.promise().query(`select emailID from userTable where Id=?`,[userId])
-
-      return {result:email}   
-  }catch(error){
-      throw error
-  }
-}
-
-
-const checkUserExists=async(assignedTo)=>{
-  try{
-    
-    const [userId]=await db.promise().query(`select Id from usertable where emailId = ?`,[assignedTo]);
-
-    return {result:userId}
-  }
-  catch(error){
+    return { result: email };
+  } catch (error) {
     throw error;
   }
-}
+};
 
-const checkEmail=async(assignedTo)=>{
-  try{
-    
-    const [email]=await db.promise().query(`select emailId from userTable where emailId='${assignedTo}'`);
+const checkUserExists = async (assignedTo) => {
+  try {
+    const [userId] = await db
+      .promise()
+      .query(`select Id from usertable where emailId = ?`, [assignedTo]);
 
-    return {result:email}
-  }catch(error){
+    return { result: userId };
+  } catch (error) {
     throw error;
   }
-}
+};
 
+const checkEmail = async (assignedTo) => {
+  try {
+    const [email] = await db
+      .promise()
+      .query(`select emailId from userTable where emailId='${assignedTo}'`);
 
+    return { result: email };
+  } catch (error) {
+    throw error;
+  }
+};
 
-
-const createBoardByAdminDb=async(userId,title,assignedTo,state,type)=>{
-  try{
+const createBoardByAdminDb = async (userId, title, assignedTo, state, type) => {
+  try {
     const newBoard = {
       userId: userId,
       title: title,
       assignedTo: assignedTo,
       state: state,
       type: type,
-      isDeleted: false
+      isDeleted: false,
     };
 
+    const [Adminresult] = await db
+      .promise()
+      .query("INSERT INTO BoardTable SET ?", newBoard);
+    if (Adminresult.affectedRows) {
+      const boardId = Adminresult.insertId;
 
-  
-  const [Adminresult] = await db.promise().query(
-      "INSERT INTO BoardTable SET ?",
-      newBoard
-  );
-  if(Adminresult.affectedRows){
-    const boardId=Adminresult.insertId;
-
-    const [result]=await db.promise().query(`insert into boardUser(boardId,userId,isDeleted) values(?,?,?)`,[boardId,userId,false]
+      const [result] = await db
+        .promise()
+        .query(
+          `insert into boardUser(boardId,userId,isDeleted) values(?,?,?)`,
+          [boardId, userId, false]
         );
-  if(result.affectedRows){
-    return{error:null,Mainresult:Adminresult,result};
+      if (result.affectedRows) {
+        return { error: null, Mainresult: Adminresult, result };
       }
-
     }
-  }catch(error){
+  } catch (error) {
     throw error;
   }
-}
-
-
+};
 
 const createBoardForUser = async (
   userId,
@@ -133,10 +125,9 @@ const createBoardForUser = async (
       type,
       isDeleted: false,
       comment,
-      boardIcon
+      boardIcon,
     };
 
-   
     const [userBoards] = await db
       .promise()
       .query(
@@ -145,15 +136,14 @@ const createBoardForUser = async (
       );
 
     const maxPriority = userBoards[0].maxPriority;
-    const newPriority = (maxPriority !== null) ? maxPriority + 1 : 0;
-
+    const newPriority = maxPriority !== null ? maxPriority + 1 : 0;
 
     const [boardResult] = await db
       .promise()
-      .query(
-        "INSERT INTO BoardTable SET ?, priority = ?, isDeleted = false",
-        [newBoard, newPriority]
-      );
+      .query("INSERT INTO BoardTable SET ?, priority = ?", [
+        newBoard,
+        newPriority,
+      ]);
 
     if (boardResult.affectedRows) {
       const boardId = boardResult.insertId;
@@ -195,7 +185,6 @@ const updateBoardPrioritiesService = async (boardArray, userId) => {
     await connection.commit();
     connection.release();
     return true;
-
   } catch (error) {
     await connection.rollback();
     connection.release();
@@ -203,7 +192,6 @@ const updateBoardPrioritiesService = async (boardArray, userId) => {
     return false;
   }
 };
-
 
 const listFavouriteBoardsData = async (userId) => {
   try {
@@ -232,37 +220,40 @@ const addAuserToAExistingBoardDb = async (userId, boardId) => {
   }
 };
 
-const getMembersofSpecificBoardAdmin=async(boardId)=>{
-  try{
-    const [memberResult]=await db.promise().query(`SELECT DISTINCT u.emailId
+const getMembersofSpecificBoardAdmin = async (boardId) => {
+  try {
+    const [memberResult] = await db.promise().query(
+      `SELECT DISTINCT u.emailId
     FROM boarduser bu
     JOIN UserTable u ON bu.userId = u.Id
     WHERE bu.boardId = ? AND u.isDeleted = false;
     ;
-    `,boardId);
-    return {result:memberResult}
-
-  }catch(error){
-    throw error
+    `,
+      boardId
+    );
+    return { result: memberResult };
+  } catch (error) {
+    throw error;
   }
-}
+};
 
-const getMembersofSpecificBoardDb=async(userId,boardId)=>{
-  try{
-    const[memberResult]=await db.promise().query(`SELECT DISTINCT u.emailId
+const getMembersofSpecificBoardDb = async (userId, boardId) => {
+  try {
+    const [memberResult] = await db.promise().query(
+      `SELECT DISTINCT u.emailId
     FROM boarduser bu
     JOIN boarduser bu2 ON bu.boardId = bu2.boardId
     JOIN UserTable u ON bu2.userId = u.Id
     WHERE bu.userId = ? AND bu.boardId = ? AND u.isDeleted = false;
     ;
-    `,[userId,boardId]
+    `,
+      [userId, boardId]
     );
-  return{result:memberResult}
-  }catch(error){
-    throw error
+    return { result: memberResult };
+  } catch (error) {
+    throw error;
   }
-}
-
+};
 
 const editBoardDbAdmin = async (requiredColumns, boardId) => {
   try {
@@ -281,7 +272,6 @@ const editBoardDbAdmin = async (requiredColumns, boardId) => {
     throw error;
   }
 };
-
 
 const editBoardDb = async (requiredColumns, userId, boardId) => {
   try {
@@ -306,76 +296,74 @@ const editBoardDb = async (requiredColumns, userId, boardId) => {
   }
 };
 
-
-
-
-const checkBoardExistforUser=async(boardId,userId)=>{
-  try{
-
-    const [rows] = await db.promise().query(
+const checkBoardExistforUser = async (boardId, userId) => {
+  try {
+    const [rows] = await db
+      .promise()
+      .query(
         `SELECT * FROM BoardTable WHERE boardId=? AND userId=? and isDeleted=false`,
         [boardId, userId]
       );
 
-  
-  return {result:rows}
+    return { result: rows };
+  } catch (error) {
+    throw error;
   }
-  catch(error){
-    throw error
+};
+
+const checkBoardExistAdmin = async (boardId) => {
+  try {
+    const [rows] = await db
+      .promise()
+      .query(`select * from boardTable where boardId=? and isDeleted=false`, [
+        boardId,
+      ]);
+    return { result: rows };
+  } catch (error) {
+    throw error;
   }
-}
+};
 
-const checkBoardExistAdmin=async(boardId)=>{
-  try{
-    const [rows]=await db.promise().query(`select * from boardTable where boardId=? and isDeleted=false`,[boardId]
-
-    );
-    return {result:rows}
-  }catch(error){
-    throw error
-  }
-
-}
-
-const checkBoardExist=async(userId,boardId)=>{
-  try{
-    
-    const [rows]=await db.promise().query(`select * from boardTable where userId=? and boardId=? and isDeleted=false`,[userId,boardId]
+const checkBoardExist = async (userId, boardId) => {
+  try {
+    const [rows] = await db
+      .promise()
+      .query(
+        `select * from boardTable where userId=? and boardId=? and isDeleted=false`,
+        [userId, boardId]
       );
 
-    return{result:rows}
-  }
-  catch(error){
+    return { result: rows };
+  } catch (error) {
     throw error;
   }
-}
+};
 
-const deleteBoardDbForAdmin=async(boardId)=>{
-  try{
-    const [rows]=await db.promise().query(`update boardTable set isDeleted=true where boardId=?`,[boardId])
-    return {result:rows}
-  } catch(error){
+const deleteBoardDbForAdmin = async (boardId) => {
+  try {
+    const [rows] = await db
+      .promise()
+      .query(`update boardTable set isDeleted=true where boardId=?`, [boardId]);
+    return { result: rows };
+  } catch (error) {
     throw error;
   }
-}
+};
 
-const deleteBoardDb=async(boardId,userId)=>{
-  try{
-
-    const [rows]=await db.promise().query(`UPDATE BoardTable
+const deleteBoardDb = async (boardId, userId) => {
+  try {
+    const [rows] = await db.promise().query(
+      `UPDATE BoardTable
     SET isDeleted = true
-    WHERE boardId = ? AND userID = ?`,[boardId,userId]);
+    WHERE boardId = ? AND userID = ?`,
+      [boardId, userId]
+    );
 
-    return {result:rows}
-    
+    return { result: rows };
+  } catch (error) {
+    throw error;
   }
-  catch(error){
-    throw error
-  }
-}
-
-
-
+};
 
 export {
   getBoards,
