@@ -1,5 +1,5 @@
 import express from "express";
-import { listBoards,adminSpecificBoard,createBoard,addAuserToAExistingBoard,deleteBoard,createBoardByAdmin, editBoard,getMembersofSpecificBoard,editBoardAdmin,listFavouriteBoards } from "../controllers/boards.controllers.js";
+import { listBoards,adminSpecificBoard,createBoard,addAuserToAExistingBoard,deleteBoard,createBoardByAdmin, editBoard,getMembersofSpecificBoard,editBoardAdmin,listFavouriteBoards,updateBoardPriority } from "../controllers/boards.controllers.js";
 import { authenticateJwtToken } from "../../Middlewares/jwtAuthMiddleware.js";
 export const router = express.Router();
 import {successStatusCodes} from '../../constants/statusCodes.js'
